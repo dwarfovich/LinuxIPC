@@ -24,6 +24,7 @@ int main()
     }
 
     std::cout << "Red from FIFO: " << data << '\n';
+    close(fd);
 
     return 0;
 }
