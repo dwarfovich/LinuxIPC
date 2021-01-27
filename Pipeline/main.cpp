@@ -1,13 +1,8 @@
-#include <QTextStream>
+#include <iostream>
 #include <QDebug>
 
 #include <sys/wait.h>
 #include <unistd.h>
-
-QTextStream& qout() {
-    static QTextStream stream {stdout};
-    return stream;
-}
 
 enum IOEnds {
     ReadEnd = 0,
@@ -22,16 +17,16 @@ int main()
     const char* message = "Hello, world\n";
 
     if (pipe(pipe_fds) < 0) {
-        qDebug() << "Cannot create pipe\n";
+        std::cerr << "Cannot create pipe\n";
         return -1;
     }
 
     pid_t child_id = fork();
     if (child_id < 0) {
-        qDebug() << "Cannot create child process with fork()\n";
+        std::cerr << "Cannot create child process with fork()\n";
         return -1;
     } else if (child_id > 0) {
-        qDebug() << "Created child process with pid" << child_id;
+        std::cerr << "Created child process with pid" << child_id;
     }
 
     if (child_id == 0) { // Child process
@@ -51,7 +46,7 @@ int main()
         close(pipe_fds[WriteEnd]); // done writing: generate eof
 
         wait(NULL); /* wait for child to exit */
-            exit(0);
+        exit(0);
     }
 
     return 0;

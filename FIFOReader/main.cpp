@@ -1,26 +1,17 @@
-#include <QTextStream>
+#include <iostream>
 
 #include <unistd.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 
-QTextStream& qout() {
-    static QTextStream stream {stdout};
-    return stream;
-}
-QTextStream& qerr() {
-    static QTextStream stream {stderr};
-    return stream;
-}
-
 int main()
 {
     constexpr char fifo_name[] = "/tmp/fifo_test";
 
-    qout() << "Waiting for writers\n";
+    std::cout << "Waiting for writers\n";
     int fd = open(fifo_name, O_RDONLY);
     if (fd < 0) {
-        qerr() << "Cannot open FIFO file\n";
+        std::cerr << "Cannot open FIFO file\n";
         return fd;
     }
 
@@ -28,11 +19,11 @@ int main()
     char data[length];
     ssize_t red = read(fd, data, length);
     if (red < 0) {
-        qerr() << "Error reading from FIFO\n";
+        std::cerr << "Error reading from FIFO\n";
         return red;
     }
 
-    qout() << "Red from FIFO: " << data << '\n';
+    std::cout << "Red from FIFO: " << data << '\n';
 
     return 0;
 }
